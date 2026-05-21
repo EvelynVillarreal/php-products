@@ -36,7 +36,7 @@ final class ProductService
 
         $document = $collection->findOne(['_id' => $id]);
 
-        if ($document === null && ObjectId::isValid($id)) {
+        if ($document === null && self::isObjectId($id)) {
             $document = $collection->findOne(['_id' => new ObjectId($id)]);
         }
 
@@ -68,7 +68,7 @@ final class ProductService
             ['$set' => $data]
         );
 
-        if ($result->getMatchedCount() === 0 && ObjectId::isValid($id)) {
+        if ($result->getMatchedCount() === 0 && self::isObjectId($id)) {
             $result = $collection->updateOne(
                 ['_id' => new ObjectId($id)],
                 ['$set' => $data]
@@ -86,12 +86,17 @@ final class ProductService
 
         $result = $collection->deleteOne(['_id' => $id]);
 
-        if ($result->getDeletedCount() === 0 && ObjectId::isValid($id)) {
+        if ($result->getDeletedCount() === 0 && self::isObjectId($id)) {
             $result = $collection->deleteOne(['_id' => new ObjectId($id)]);
         }
 
         if ($result->getDeletedCount() === 0) {
             throw new \RuntimeException("Product with ID {$id} was not found");
         }
+    }
+
+    private static function isObjectId(string $value): bool
+    {
+        return preg_match('/^[a-fA-F0-9]{24}$/', $value) === 1;
     }
 }

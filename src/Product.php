@@ -9,7 +9,7 @@ use MongoDB\BSON\UTCDateTime;
 
 final class Product
 {
-    private const float VAT_RATE = 0.15;
+    private const VAT_RATE = 0.15;
 
     public function __construct(
         private string $id = '',

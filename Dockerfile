@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable mongodb \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 COPY composer.json .
@@ -17,7 +17,7 @@ COPY public/ public/
 COPY views/ views/
 COPY css/ css/
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --no-interaction --ignore-platform-req=ext-mongodb --optimize-autoloader
 
 FROM php:8.2-cli
 

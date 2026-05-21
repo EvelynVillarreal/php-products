@@ -18,7 +18,7 @@ final class ProductService
         $collection = $this->database->getProductsCollection();
         $documents = $collection->find(
             [],
-            ['sort' => ['registrationDate' => -1]]
+            ['sort' => ['RegistrationDate' => -1]]
         );
 
         $products = [];
@@ -43,8 +43,7 @@ final class ProductService
             return null;
         }
 
-        $product = Product::fromBson($document);
-        return $product;
+        return Product::fromBson($document);
     }
 
     public function create(Product $product): string
@@ -65,7 +64,7 @@ final class ProductService
 
         $collection = $this->database->getProductsCollection();
         $data = $product->toBson();
-        unset($data['registrationDate']);
+        unset($data['RegistrationDate']);
 
         $result = $collection->updateOne(
             ['_id' => new ObjectId($id)],

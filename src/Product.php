@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use MongoDB\BSON\Document;
+use MongoDB\BSON\UTCDateTime;
 
 final class Product
 {
@@ -26,26 +27,32 @@ final class Product
 
     public static function fromBson(Document $document): self
     {
+        $regDate = $document['RegistrationDate'];
+
+        if ($regDate instanceof UTCDateTime) {
+            $regDate = $regDate->toDateTime()->format('c');
+        }
+
         return new self(
             id: (string) $document['_id'],
-            name: (string) $document['name'],
-            category: (string) $document['category'],
-            basePrice: (float) $document['basePrice'],
-            quantity: (int) $document['quantity'],
-            description: (string) ($document['description'] ?? ''),
-            registrationDate: (string) $document['registrationDate']
+            name: (string) $document['Name'],
+            category: (string) $document['Category'],
+            basePrice: (float) $document['BasePrice'],
+            quantity: (int) $document['Quantity'],
+            description: (string) ($document['Description'] ?? ''),
+            registrationDate: (string) $regDate
         );
     }
 
     public function toBson(): array
     {
         return [
-            'name' => $this->name,
-            'category' => $this->category,
-            'basePrice' => $this->basePrice,
-            'quantity' => $this->quantity,
-            'description' => $this->description,
-            'registrationDate' => $this->registrationDate,
+            'Name' => $this->name,
+            'Category' => $this->category,
+            'BasePrice' => $this->basePrice,
+            'Quantity' => $this->quantity,
+            'Description' => $this->description,
+            'RegistrationDate' => new UTCDateTime(new \DateTimeImmutable($this->registrationDate)),
         ];
     }
 

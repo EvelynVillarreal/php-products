@@ -38,6 +38,6 @@ final class Database
 
     public function getProductsCollection(): Collection
     {
-        return $this->getCollection('products');
+        return $this->getCollection('Product');
     }
 }

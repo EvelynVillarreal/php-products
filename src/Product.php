@@ -36,7 +36,7 @@ final class Product
             id: (string) $document['_id'],
             name: (string) $document['Name'],
             category: (string) $document['Category'],
-            basePrice: (float) $document['BasePrice'],
+            basePrice: (float) (string) $document['BasePrice'],
             quantity: (int) $document['Quantity'],
             description: (string) ($document['Description'] ?? ''),
             registrationDate: (string) $regDate

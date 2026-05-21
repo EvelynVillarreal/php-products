@@ -13,9 +13,8 @@ $productService = new ProductService($db);
 $controller = new ProductController($productService);
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$basePath = dirname($_SERVER['SCRIPT_NAME']);
-$route = str_replace($basePath, '', $requestUri);
-$route = '/' . trim($route, '/');
+$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+$route = '/' . trim(substr($requestUri, strlen($basePath)), '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
 $productId = null;

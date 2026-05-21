@@ -1,0 +1,38 @@
+FROM php:8.2-cli AS build
+
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libcurl4-openssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY composer.json .
+COPY src/ src/
+COPY public/ public/
+COPY views/ views/
+COPY css/ css/
+
+RUN composer install --no-dev --optimize-autoloader
+
+FROM php:8.2-cli
+
+RUN apt-get update && apt-get install -y \
+    libcurl4-openssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=build /app .
+
+EXPOSE 8080
+
+ENV MONGO_CONNECTION_STRING=mongodb+srv://root123:root123@clusterglobal.wtz0nut.mongodb.net/?appName=ClusterGlobal
+ENV MONGO_DATABASE_NAME=ProductosMVC
+
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]

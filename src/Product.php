@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use MongoDB\Model\BSONDocument;
+use MongoDB\BSON\Document;
 
 final class Product
 {
@@ -24,7 +24,7 @@ final class Product
         }
     }
 
-    public static function fromBson(BSONDocument $document): self
+    public static function fromBson(Document $document): self
     {
         return new self(
             id: (string) $document['_id'],

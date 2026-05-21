@@ -1,7 +1,6 @@
-FROM php:8.2-cli AS build
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
-    git \
     unzip \
     libcurl4-openssl-dev \
     && pecl install mongodb \
@@ -11,24 +10,9 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
-COPY composer.json .
-COPY src/ src/
-COPY public/ public/
-COPY views/ views/
-COPY css/ css/
+COPY . .
 
-RUN composer install --no-dev --no-interaction --ignore-platform-req=ext-mongodb --optimize-autoloader
-
-FROM php:8.2-cli
-
-RUN apt-get update && apt-get install -y \
-    libcurl4-openssl-dev \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY --from=build /app .
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 EXPOSE 8080
 

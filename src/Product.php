@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-use MongoDB\BSON\Document;
 use MongoDB\BSON\UTCDateTime;
 
 final class Product
@@ -25,7 +24,7 @@ final class Product
         }
     }
 
-    public static function fromBson(Document $document): self
+    public static function fromBson(object $document): self
     {
         $regDate = $document['RegistrationDate'];
 
